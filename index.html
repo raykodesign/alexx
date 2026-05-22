@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Alex | Sepia Shadow</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --mx: 50vw;
+      --my: 50vh;
+      --bg: url("foto.jpg"); /* La foto debe llamarse foto.jpg y estar junto a este HTML */
+      --oro: #d6a23c;
+      --oro-fuerte: #ffd06a;
+      --hueso: #e6d4aa;
+      --sombra: #100804;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      background: #050301;
+      overflow: hidden;
+    }
+
+    body {
+      cursor: default;
+      font-family: Georgia, "Times New Roman", serif;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
+    .hero {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      display: grid;
+      place-items: center;
+      isolation: isolate;
+      background: #060301;
+    }
+
+    .foto-base,
+    .foto-color {
+      position: absolute;
+      inset: -3%;
+      z-index: -8;
+      background-image: var(--bg);
+      background-size: cover;
+      background-position: center;
+      transform: scale(1.045);
+      animation: respirarFondo 18s ease-in-out infinite alternate;
+    }
+
+    .foto-base {
+      filter: sepia(.46) saturate(.82) contrast(1.16) brightness(.42);
+    }
+
+    .foto-color {
+      z-index: -7;
+      filter: saturate(1.08) contrast(1.06) brightness(.98);
+      opacity: .95;
+      -webkit-mask-image: radial-gradient(circle 245px at var(--mx) var(--my), #000 0%, rgba(0,0,0,.92) 35%, rgba(0,0,0,.35) 63%, transparent 100%);
+      mask-image: radial-gradient(circle 245px at var(--mx) var(--my), #000 0%, rgba(0,0,0,.92) 35%, rgba(0,0,0,.35) 63%, transparent 100%);
+    }
+
+    .sombra-general {
+      position: absolute;
+      inset: 0;
+      z-index: -6;
+      pointer-events: none;
+      background:
+        radial-gradient(circle 250px at var(--mx) var(--my), rgba(255,215,125,.10), transparent 62%),
+        radial-gradient(circle at 50% 50%, rgba(55,31,10,.14), rgba(0,0,0,.32) 48%, rgba(0,0,0,.76) 100%),
+        linear-gradient(180deg, rgba(0,0,0,.10), rgba(0,0,0,.58));
+    }
+
+    .linterna {
+      position: absolute;
+      inset: 0;
+      z-index: -5;
+      pointer-events: none;
+      background:
+        radial-gradient(circle 260px at var(--mx) var(--my),
+          rgba(255,214,116,.16) 0%,
+          rgba(214,156,64,.08) 38%,
+          rgba(0,0,0,.05) 62%,
+          rgba(0,0,0,.62) 100%);
+      mix-blend-mode: screen;
+      transition: background .08s linear;
+    }
+
+    .viñeta {
+      position: absolute;
+      inset: 0;
+      z-index: -4;
+      pointer-events: none;
+      background: radial-gradient(circle at center, transparent 22%, rgba(12,7,2,.38) 70%, rgba(0,0,0,.86) 100%);
+    }
+
+    .polvo {
+      position: absolute;
+      inset: 0;
+      z-index: -3;
+      pointer-events: none;
+      opacity: .13;
+      background-image:
+        radial-gradient(circle, rgba(255,220,140,.34) 0 1px, transparent 1.5px),
+        radial-gradient(circle, rgba(255,255,255,.15) 0 1px, transparent 1.7px);
+      background-size: 90px 90px, 140px 140px;
+      background-position: 0 0, 30px 55px;
+      animation: polvo 22s linear infinite;
+    }
+
+    .humo {
+      position: absolute;
+      inset: -25%;
+      z-index: -2;
+      pointer-events: none;
+      opacity: .28;
+      filter: blur(54px);
+      background:
+        radial-gradient(circle at 20% 76%, rgba(130,82,28,.34), transparent 28%),
+        radial-gradient(circle at 82% 22%, rgba(236,188,94,.16), transparent 23%),
+        radial-gradient(circle at 55% 56%, rgba(255,222,151,.09), transparent 30%);
+      animation: humo 18s ease-in-out infinite alternate;
+    }
+
+    .flicker-capa {
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      opacity: 0;
+      background: rgba(0,0,0,.22);
+      transition: opacity .08s linear;
+    }
+
+    .flicker-capa.activo { opacity: .22; }
+    .flicker-capa.activo2 { opacity: .36; }
+
+    .nombre-wrap {
+      position: relative;
+      text-align: center;
+      width: min(520px, 88vw);
+      transform: translateY(2px);
+      filter: drop-shadow(0 18px 28px rgba(0,0,0,.95));
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
+    .brillo-letra {
+      position: absolute;
+      left: 50%;
+      top: 43%;
+      width: min(360px, 70vw);
+      height: 150px;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      border-radius: 50%;
+      opacity: .78;
+      background: radial-gradient(ellipse at center, rgba(255,204,88,.30) 0%, rgba(184,112,26,.12) 38%, rgba(74,39,8,.04) 58%, transparent 76%);
+      filter: blur(28px);
+      animation: brilloRespira 3s ease-in-out infinite alternate;
+    }
+
+    .nombre {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: .035em;
+      width: auto;
+      max-width: 100%;
+      padding: 0 .06em .08em;
+      overflow: visible;
+      color: transparent;
+      font-family: "Old English Text MT", "UnifrakturCook", "Blackletter", "Cinzel Decorative", Georgia, serif;
+      font-size: clamp(38px, 6.6vw, 76px);
+      line-height: .9;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      font-weight: 900;
+      -webkit-text-stroke: .9px rgba(242,225,176,.96);
+      text-shadow:
+        0 0 4px rgba(255,229,158,.95),
+        0 0 13px rgba(230,167,64,.76),
+        0 0 30px rgba(120,70,17,.64),
+        0 5px 0 rgba(25,11,2,.9),
+        0 18px 24px rgba(0,0,0,.95);
+      animation: llama 2.8s ease-in-out 1.65s infinite alternate;
+    }
+
+    .nombre span {
+      position: relative;
+      display: inline-block;
+      color: transparent;
+      background: linear-gradient(180deg, #fff1c6 0%, #c9963d 28%, #7d4f1b 55%, #241006 83%, #050201 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      opacity: 0;
+      transform: translateY(18px) scale(.82) rotate(-3deg);
+      animation: aparecerLetra .62s cubic-bezier(.16, 1.25, .35, 1) forwards;
+    }
+
+    .nombre span:nth-of-type(1) { animation-delay: .22s; }
+    .nombre span:nth-of-type(2) { animation-delay: .42s; }
+    .nombre span:nth-of-type(3) { animation-delay: .62s; }
+    .nombre span:nth-of-type(4) { animation-delay: .82s; }
+
+    .linea {
+      width: min(170px, 36vw);
+      height: 1px;
+      margin: 9px auto 0;
+      background: linear-gradient(90deg, transparent, rgba(121,76,24,.2), rgba(255,203,88,.95), rgba(121,76,24,.2), transparent);
+      box-shadow: 0 0 10px rgba(255,195,74,.6), 0 0 24px rgba(109,67,20,.45);
+      transform: scaleX(0);
+      animation: abrirLinea .75s ease 1.6s forwards;
+    }
+
+    .codigo {
+      margin-top: 8px;
+      font-family: "Trebuchet MS", Arial, sans-serif;
+      font-size: clamp(10px, 1.5vw, 13px);
+      font-weight: 300;
+      letter-spacing: .28em;
+      color: rgba(238, 211, 153, .82);
+      text-shadow: 0 0 8px rgba(255, 198, 82, .45), 0 8px 18px rgba(0,0,0,.9);
+      opacity: 0;
+      transform: translateY(3px);
+      animation: aparecerCodigo .8s ease 1.95s forwards, respirarCodigo 7.8s ease-in-out 3s infinite;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
+    .chispa {
+      position: fixed;
+      top: 110vh;
+      left: 50vw;
+      z-index: 3;
+      color: rgba(255,203,94,.30);
+      pointer-events: none;
+      font-size: var(--size);
+      text-shadow: 0 0 14px rgba(255,195,74,.55);
+      animation: subir var(--dur) linear infinite;
+      animation-delay: var(--delay);
+    }
+
+    @keyframes respirarFondo {
+      to { transform: scale(1.085) translate(-1.1%, -1%); }
+    }
+
+    @keyframes polvo {
+      to { background-position: 120px -220px, -160px -260px; }
+    }
+
+    @keyframes humo {
+      to { transform: translate(6%, -4%) rotate(8deg); }
+    }
+
+    @keyframes aparecerLetra {
+      to { opacity: 1; transform: translateY(0) scale(1) rotate(0deg); }
+    }
+
+    @keyframes aparecerCodigo {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes respirarCodigo {
+      0%, 100% {
+        opacity: .86;
+        letter-spacing: .28em;
+        filter: blur(0);
+      }
+      42% {
+        opacity: .86;
+        letter-spacing: .28em;
+        filter: blur(0);
+      }
+      55% {
+        opacity: .18;
+        letter-spacing: .34em;
+        filter: blur(1.6px);
+      }
+      68% {
+        opacity: .82;
+        letter-spacing: .28em;
+        filter: blur(0);
+      }
+    }
+
+    @keyframes llama {
+      from {
+        text-shadow:
+          0 0 4px rgba(255,229,158,.82),
+          0 0 12px rgba(230,167,64,.66),
+          0 0 24px rgba(120,70,17,.62),
+          0 5px 0 rgba(25,11,2,.9),
+          0 18px 24px rgba(0,0,0,.95);
+      }
+      to {
+        text-shadow:
+          0 0 6px rgba(255,239,184,1),
+          0 0 20px rgba(255,190,67,.88),
+          0 0 38px rgba(145,85,20,.78),
+          0 5px 0 rgba(25,11,2,.9),
+          0 18px 24px rgba(0,0,0,.95);
+      }
+    }
+
+    @keyframes brilloRespira {
+      from { opacity: .48; transform: translate(-50%, -50%) scale(.94); }
+      to { opacity: .86; transform: translate(-50%, -50%) scale(1.08); }
+    }
+
+    @keyframes abrirLinea {
+      to { transform: scaleX(1); }
+    }
+
+    @keyframes subir {
+      from { transform: translate3d(var(--x), 0, 0) rotate(0deg); opacity: 0; }
+      10% { opacity: .42; }
+      80% { opacity: .22; }
+      to { transform: translate3d(calc(var(--x) + var(--float)), -130vh, 0) rotate(360deg); opacity: 0; }
+    }
+
+    @media (max-width: 640px) {
+      .foto-color {
+        -webkit-mask-image: radial-gradient(circle 200px at var(--mx) var(--my), #000 0%, rgba(0,0,0,.9) 35%, rgba(0,0,0,.32) 64%, transparent 100%);
+        mask-image: radial-gradient(circle 200px at var(--mx) var(--my), #000 0%, rgba(0,0,0,.9) 35%, rgba(0,0,0,.32) 64%, transparent 100%);
+      }
+
+      .linterna {
+        background: radial-gradient(circle 210px at var(--mx) var(--my), rgba(255,216,126,.14) 0%, rgba(191,124,33,.08) 42%, rgba(0,0,0,.58) 100%);
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="hero" id="hero">
+    <div class="foto-base"></div>
+    <div class="foto-color"></div>
+    <div class="sombra-general"></div>
+    <div class="linterna"></div>
+    <div class="viñeta"></div>
+    <div class="polvo"></div>
+    <div class="humo"></div>
+    <div class="flicker-capa" id="flicker"></div>
+
+    <div class="nombre-wrap">
+      <div class="brillo-letra"></div>
+      <h1 class="nombre" aria-label="Alex"><span>A</span><span>L</span><span>E</span><span>X</span></h1>
+      <div class="linea"></div>
+      <div class="codigo">101834553</div>
+    </div>
+  </main>
+
+  <script>
+    const root = document.documentElement;
+    const hero = document.getElementById('hero');
+    const flicker = document.getElementById('flicker');
+
+    document.addEventListener('contextmenu', (e) => e.preventDefault());
+    document.addEventListener('selectstart', (e) => e.preventDefault());
+    document.addEventListener('dragstart', (e) => e.preventDefault());
+
+    function moverLinterna(x, y) {
+      root.style.setProperty('--mx', x + 'px');
+      root.style.setProperty('--my', y + 'px');
+    }
+
+    moverLinterna(window.innerWidth / 2, window.innerHeight / 2);
+
+    let ultimoParpadeo = 0;
+    let ocupado = false;
+
+    function parpadeoSuave() {
+      const ahora = Date.now();
+      if (ocupado || ahora - ultimoParpadeo < 2600) return;
+      if (Math.random() > 0.035) return;
+
+      ocupado = true;
+      ultimoParpadeo = ahora;
+
+      flicker.classList.add('activo');
+      setTimeout(() => flicker.classList.remove('activo'), 90);
+      setTimeout(() => flicker.classList.add('activo2'), 160);
+      setTimeout(() => flicker.classList.remove('activo2'), 240);
+      setTimeout(() => flicker.classList.add('activo'), 330);
+      setTimeout(() => flicker.classList.remove('activo'), 420);
+      setTimeout(() => { ocupado = false; }, 900);
+    }
+
+    window.addEventListener('pointermove', (e) => {
+      moverLinterna(e.clientX, e.clientY);
+      parpadeoSuave();
+    }, { passive: true });
+
+    window.addEventListener('pointerleave', () => {
+      moverLinterna(window.innerWidth / 2, window.innerHeight / 2);
+    });
+
+    const simbolos = ['✦', '✧', '†', '•'];
+    for (let i = 0; i < 18; i++) {
+      const p = document.createElement('span');
+      p.className = 'chispa';
+      p.textContent = simbolos[Math.floor(Math.random() * simbolos.length)];
+      p.style.left = Math.random() * 100 + 'vw';
+      p.style.setProperty('--x', (Math.random() * 50 - 25) + 'px');
+      p.style.setProperty('--float', (Math.random() * 120 - 60) + 'px');
+      p.style.setProperty('--dur', (11 + Math.random() * 15) + 's');
+      p.style.setProperty('--delay', (-Math.random() * 14) + 's');
+      p.style.setProperty('--size', (8 + Math.random() * 11) + 'px');
+      hero.appendChild(p);
+    }
+  </script>
+</body>
+</html>
