@@ -47,33 +47,97 @@
     }
 
     .foto-base,
-    .foto-color {
+    .foto-color,
+    .foto-oro,
+    .degradado-revela {
       position: absolute;
       inset: -3%;
-      z-index: -8;
       background-image: var(--bg);
       background-size: cover;
       background-position: center;
       transform: scale(1.045);
+      pointer-events: none;
       animation: respirarFondo 18s ease-in-out infinite alternate;
     }
 
     .foto-base {
-      filter: sepia(.46) saturate(.82) contrast(1.16) brightness(.42);
+      z-index: -12;
+      filter: sepia(.44) saturate(.86) contrast(1.17) brightness(.44);
     }
 
     .foto-color {
-      z-index: -7;
-      filter: saturate(1.08) contrast(1.06) brightness(.98);
+      z-index: -11;
       opacity: .95;
+      filter: saturate(1.08) contrast(1.06) brightness(.98);
       -webkit-mask-image: radial-gradient(circle 245px at var(--mx) var(--my), #000 0%, rgba(0,0,0,.92) 35%, rgba(0,0,0,.35) 63%, transparent 100%);
       mask-image: radial-gradient(circle 245px at var(--mx) var(--my), #000 0%, rgba(0,0,0,.92) 35%, rgba(0,0,0,.35) 63%, transparent 100%);
+    }
+
+    .foto-oro {
+      z-index: -10;
+      opacity: .22;
+      filter: sepia(1) saturate(1.25) contrast(1.12) brightness(.88);
+      mix-blend-mode: screen;
+    }
+
+    .degradado-revela {
+      z-index: -9;
+      opacity: .95;
+      filter: saturate(1.16) contrast(1.12) brightness(1.18);
+      mix-blend-mode: screen;
+      -webkit-mask-image: linear-gradient(112deg,
+        transparent 0%,
+        transparent 30%,
+        rgba(0,0,0,.20) 38%,
+        rgba(0,0,0,.82) 47%,
+        #000 52%,
+        rgba(0,0,0,.78) 57%,
+        rgba(0,0,0,.18) 66%,
+        transparent 76%,
+        transparent 100%);
+      mask-image: linear-gradient(112deg,
+        transparent 0%,
+        transparent 30%,
+        rgba(0,0,0,.20) 38%,
+        rgba(0,0,0,.82) 47%,
+        #000 52%,
+        rgba(0,0,0,.78) 57%,
+        rgba(0,0,0,.18) 66%,
+        transparent 76%,
+        transparent 100%);
+      -webkit-mask-size: 330% 330%;
+      mask-size: 330% 330%;
+      animation: respirarFondo 18s ease-in-out infinite alternate, revelarFotoOro 6.2s ease-in-out infinite;
+    }
+
+    .oro-cinematico {
+      position: absolute;
+      inset: -12%;
+      z-index: -8;
+      pointer-events: none;
+      opacity: .88;
+      background:
+        linear-gradient(112deg,
+          transparent 0%,
+          transparent 24%,
+          rgba(95,55,10,.08) 34%,
+          rgba(255,190,54,.22) 42%,
+          rgba(255,241,174,.62) 50%,
+          rgba(255,192,57,.28) 58%,
+          rgba(83,45,9,.08) 66%,
+          transparent 78%,
+          transparent 100%);
+      background-size: 340% 340%;
+      background-position: 140% 50%;
+      mix-blend-mode: screen;
+      filter: blur(10px);
+      animation: barridoLuzVisible 6.2s ease-in-out infinite;
     }
 
     .sombra-general {
       position: absolute;
       inset: 0;
-      z-index: -6;
+      z-index: -7;
       pointer-events: none;
       background:
         radial-gradient(circle 250px at var(--mx) var(--my), rgba(255,215,125,.10), transparent 62%),
@@ -84,7 +148,7 @@
     .linterna {
       position: absolute;
       inset: 0;
-      z-index: -5;
+      z-index: -6;
       pointer-events: none;
       background:
         radial-gradient(circle 260px at var(--mx) var(--my),
@@ -99,7 +163,7 @@
     .viñeta {
       position: absolute;
       inset: 0;
-      z-index: -4;
+      z-index: -5;
       pointer-events: none;
       background: radial-gradient(circle at center, transparent 22%, rgba(12,7,2,.38) 70%, rgba(0,0,0,.86) 100%);
     }
@@ -107,7 +171,7 @@
     .polvo {
       position: absolute;
       inset: 0;
-      z-index: -3;
+      z-index: -4;
       pointer-events: none;
       opacity: .13;
       background-image:
@@ -121,7 +185,7 @@
     .humo {
       position: absolute;
       inset: -25%;
-      z-index: -2;
+      z-index: -3;
       pointer-events: none;
       opacity: .28;
       filter: blur(54px);
@@ -135,7 +199,7 @@
     .flicker-capa {
       position: absolute;
       inset: 0;
-      z-index: -1;
+      z-index: -2;
       pointer-events: none;
       opacity: 0;
       background: rgba(0,0,0,.22);
@@ -267,6 +331,30 @@
       to { transform: scale(1.085) translate(-1.1%, -1%); }
     }
 
+    @keyframes revelarFotoOro {
+      0% {
+        -webkit-mask-position: 150% 50%;
+        mask-position: 150% 50%;
+        opacity: .08;
+      }
+      16% { opacity: .50; }
+      42% { opacity: .95; }
+      70% { opacity: .70; }
+      100% {
+        -webkit-mask-position: -70% 50%;
+        mask-position: -70% 50%;
+        opacity: .10;
+      }
+    }
+
+    @keyframes barridoLuzVisible {
+      0% { background-position: 150% 50%; opacity: .15; }
+      18% { opacity: .58; }
+      45% { opacity: .90; }
+      72% { opacity: .62; }
+      100% { background-position: -70% 50%; opacity: .16; }
+    }
+
     @keyframes polvo {
       to { background-position: 120px -220px, -160px -260px; }
     }
@@ -284,26 +372,10 @@
     }
 
     @keyframes respirarCodigo {
-      0%, 100% {
-        opacity: .86;
-        letter-spacing: .28em;
-        filter: blur(0);
-      }
-      42% {
-        opacity: .86;
-        letter-spacing: .28em;
-        filter: blur(0);
-      }
-      55% {
-        opacity: .18;
-        letter-spacing: .34em;
-        filter: blur(1.6px);
-      }
-      68% {
-        opacity: .82;
-        letter-spacing: .28em;
-        filter: blur(0);
-      }
+      0%, 100% { opacity: .86; letter-spacing: .28em; filter: blur(0); }
+      42% { opacity: .86; letter-spacing: .28em; filter: blur(0); }
+      55% { opacity: .18; letter-spacing: .34em; filter: blur(1.6px); }
+      68% { opacity: .82; letter-spacing: .28em; filter: blur(0); }
     }
 
     @keyframes llama {
@@ -358,10 +430,37 @@
       }
 
       .foto-base,
-      .foto-color {
+      .foto-color,
+      .foto-oro,
+      .degradado-revela {
         inset: -7%;
         background-position: center center;
         transform: scale(1.08);
+      }
+
+      .foto-color {
+        -webkit-mask-image: radial-gradient(circle 185px at var(--mx) var(--my), #000 0%, rgba(0,0,0,.9) 35%, rgba(0,0,0,.32) 64%, transparent 100%);
+        mask-image: radial-gradient(circle 185px at var(--mx) var(--my), #000 0%, rgba(0,0,0,.9) 35%, rgba(0,0,0,.32) 64%, transparent 100%);
+      }
+
+      .foto-oro {
+        opacity: .16;
+      }
+
+      .degradado-revela {
+        opacity: .82;
+        -webkit-mask-size: 390% 390%;
+        mask-size: 390% 390%;
+      }
+
+      .oro-cinematico {
+        opacity: .74;
+        background-size: 390% 390%;
+        filter: blur(12px);
+      }
+
+      .linterna {
+        background: radial-gradient(circle 210px at var(--mx) var(--my), rgba(255,216,126,.14) 0%, rgba(191,124,33,.08) 42%, rgba(0,0,0,.58) 100%);
       }
 
       .nombre-wrap {
@@ -391,14 +490,6 @@
         font-size: clamp(9px, 3.2vw, 11px);
         letter-spacing: .20em;
       }
-      .foto-color {
-        -webkit-mask-image: radial-gradient(circle 200px at var(--mx) var(--my), #000 0%, rgba(0,0,0,.9) 35%, rgba(0,0,0,.32) 64%, transparent 100%);
-        mask-image: radial-gradient(circle 185px at var(--mx) var(--my), #000 0%, rgba(0,0,0,.9) 35%, rgba(0,0,0,.32) 64%, transparent 100%);
-      }
-
-      .linterna {
-        background: radial-gradient(circle 210px at var(--mx) var(--my), rgba(255,216,126,.14) 0%, rgba(191,124,33,.08) 42%, rgba(0,0,0,.58) 100%);
-      }
     }
   </style>
 </head>
@@ -406,6 +497,9 @@
   <main class="hero" id="hero">
     <div class="foto-base"></div>
     <div class="foto-color"></div>
+    <div class="foto-oro"></div>
+    <div class="degradado-revela"></div>
+    <div class="oro-cinematico"></div>
     <div class="sombra-general"></div>
     <div class="linterna"></div>
     <div class="viñeta"></div>
