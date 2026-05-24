@@ -494,6 +494,9 @@
   </style>
 </head>
 <body>
+
+  <audio id="bgMusic" src="musica.mp3" preload="auto" autoplay loop playsinline></audio>
+
   <main class="hero" id="hero">
     <div class="foto-base"></div>
     <div class="foto-color"></div>
@@ -519,6 +522,53 @@
     const root = document.documentElement;
     const hero = document.getElementById('hero');
     const flicker = document.getElementById('flicker');
+
+    const bgMusic = document.getElementById('bgMusic');
+    bgMusic.volume = 0.45;
+    bgMusic.muted = false;
+
+    let musicaActivada = false;
+    let ultimoIntentoMusica = 0;
+
+    function quitarActivadoresMusica() {
+      window.removeEventListener('mousemove', activarMusicaFondo);
+      window.removeEventListener('pointermove', activarMusicaFondo);
+      window.removeEventListener('touchstart', activarMusicaFondo);
+      window.removeEventListener('touchmove', activarMusicaFondo);
+      window.removeEventListener('click', activarMusicaFondo);
+      window.removeEventListener('keydown', activarMusicaFondo);
+    }
+
+    function activarMusicaFondo() {
+      if (!bgMusic || musicaActivada || !bgMusic.paused) return;
+
+      const ahora = Date.now();
+      if (ahora - ultimoIntentoMusica < 450) return;
+      ultimoIntentoMusica = ahora;
+
+      bgMusic.play()
+        .then(() => {
+          musicaActivada = true;
+          quitarActivadoresMusica();
+        })
+        .catch(() => {
+          /* Si el navegador lo bloquea, se intentará otra vez con movimiento, toque, click o tecla */
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', activarMusicaFondo);
+    window.addEventListener('load', activarMusicaFondo);
+
+    setTimeout(activarMusicaFondo, 300);
+    setTimeout(activarMusicaFondo, 900);
+    setTimeout(activarMusicaFondo, 1600);
+
+    window.addEventListener('mousemove', activarMusicaFondo, { passive: true });
+    window.addEventListener('pointermove', activarMusicaFondo, { passive: true });
+    window.addEventListener('touchstart', activarMusicaFondo, { passive: true });
+    window.addEventListener('touchmove', activarMusicaFondo, { passive: true });
+    window.addEventListener('click', activarMusicaFondo);
+    window.addEventListener('keydown', activarMusicaFondo);
 
     document.addEventListener('contextmenu', (e) => e.preventDefault());
     document.addEventListener('selectstart', (e) => e.preventDefault());
@@ -554,6 +604,7 @@
     window.addEventListener('pointermove', (e) => {
       moverLinterna(e.clientX, e.clientY);
       parpadeoSuave();
+      activarMusicaFondo();
     }, { passive: true });
 
     window.addEventListener('pointerleave', () => {
@@ -564,6 +615,7 @@
       if (!e.touches || !e.touches[0]) return;
       moverLinterna(e.touches[0].clientX, e.touches[0].clientY);
       parpadeoSuave();
+      activarMusicaFondo();
     }, { passive: true });
 
     const simbolos = ['✦', '✧', '†', '•'];
